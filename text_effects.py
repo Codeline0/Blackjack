@@ -1,7 +1,7 @@
 from time import sleep
 import sys
 
-def writing_effect(txt, time):
+def writing_effect(txt, time = 0.05):
     for char in txt:
         sleep(time)
         print(char, end="")
