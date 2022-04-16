@@ -1,19 +1,6 @@
 from tutorial import main as tuto
-
-class Player:
-    sum_of_cards = 0
-    bet = 0
-    blackjack = False
-    pairs = False
-    bust = False
-    ace = True
-    hit = False
-    stand = False
-    double_down = False
-
-    def __init__(self, name, is_dealer=False):
-        self.name = name
-        self.is_dealer = is_dealer
+import text_effects
+import game
 
 #This function is set to repeat itself until it gets a satisfactory answer.
 #Either if they choose to play the tutorial (loads tutorial script), or not (pass).
@@ -30,8 +17,7 @@ def tuto_answer(script):
 
 # The main game
 def main():
-    print(
-        """
+    logo = '''
 ---------------------------------------------------------------------------------     
  /$$$$$$$  /$$                     /$$                               /$$      
 | $$__  $$| $$                    | $$                              | $$      
@@ -45,18 +31,23 @@ def main():
                                       |  $$$$$$/                              
                                        \______/       
 --------------------------------------------------------------------------------- 
+    '''
+    intro_question = "Ready to play some good old fashioned Blackjack?\n\n"
+    name_question = "First of all, what's your name?\n\n" 
+    tuto_question = "Great to know you {}, now, would you like to play the tutorial? y/n\n\n"
+    dialogue_speed = 0.05
 
-Ready to play some good old fashioned Blackjack? 
-
-First thing first, what should I call you?
-
-    """
-    )
-
+    text_effects.rise_effect(logo, 0.1)
+    text_effects.writing_effect(intro_question, dialogue_speed)
+    text_effects.enter_continue()
+    text_effects.writing_effect(name_question, dialogue_speed)
+    
     main_name = input()
-    global main_player  #Used a global variable to use this variable in different functions
-    main_player = Player(main_name)
-    print("Great to know you {}, now, would you like to play the tutorial? y/n".format(main_player.name))
+    print("\033[A                             \033[A")  #Used to erase previous print
+    global main_player  #Used global varible for usage in different functions
+    main_player = game.Player(main_name)
+
+    text_effects.writing_effect(tuto_question.format(main_player.name), dialogue_speed)
 
     tuto_answer(tuto)
     
