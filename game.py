@@ -1,4 +1,5 @@
 import random
+from xml.dom import ValidationErr
 import text_effects
 
 class Player:
@@ -49,15 +50,23 @@ class Player:
         self.ace = True
     
     def sum_cards_hand(self):
+        values = []
         non_nums = {
         "J" : 10,
         "Q" : 10,
         "K" : 10,
-        "A" : [1, 11]
+        "A" : 11
     }
         for card in self.cards_in_hand:
-            value = card[:1]
-            
+            values.append(card[:1])
+        
+        if "A" in values:
+            ace_idx = values.index("A")
+            a_letter = values.pop(ace_idx)
+            values.append(a_letter)
+        
+        # for value in values:
+                    
             
 
 
@@ -110,4 +119,4 @@ def return_pile(card_pile, used_deck):
         used_deck.append(card)
     return used_deck
 
-def player_turn()
+# def player_turn()
