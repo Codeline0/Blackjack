@@ -1,17 +1,15 @@
-from cgitb import text
 import random
 import text_effects
-from re import A
 
 class Player:
+    cards_in_hand = []
     sum_of_cards = 0
-    num_of_cards = 0
     money = 100
     bet = 0
     blackjack = False
     pairs = False
     bust = False
-    ace = True
+    ace = False
     hit = False
     stand = False
     double_down = False
@@ -34,6 +32,34 @@ class Player:
     
     def lost(self):
         self.bet -= self.bet
+
+    def win(self):
+        if self.double_down == True:
+            self.bet += self.bet*2
+        else:
+            self.bet += self.bet
+    
+    def busted(self):
+        self.bust = True
+
+    def pair(self):
+        self.pairs = True
+    
+    def has_ace(self):
+        self.ace = True
+    
+    def sum_cards_hand(self):
+        non_nums = {
+        "J" : 10,
+        "Q" : 10,
+        "K" : 10,
+        "A" : [1, 11]
+    }
+        for card in self.cards_in_hand:
+            value = card[:1]
+            
+            
+
 
 def create_decks(num_decks = 6):
     decks = []
@@ -72,4 +98,16 @@ def betting(player, num):
         num = input()
         betting(player, num)
         
+def dealing(shuffled_deck, card_pile, lst_players):
+    for player in lst_players:
+        for i in range(2):
+            card = shuffled_deck.pop()
+            card_pile.append(card)
+            player.cards_in_hand.append(card)
 
+def return_pile(card_pile, used_deck):
+    for card in card_pile:
+        used_deck.append(card)
+    return used_deck
+
+def player_turn()
