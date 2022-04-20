@@ -36,9 +36,17 @@ class Player:
 
     def win(self):
         if self.double_down == True:
-            self.bet += self.bet*2
+            self.money += self.bet*2
+            text_effects.writing_effect("Congratulations! You won ${}!".format(self.bet))
+            self.bet = 0
+        elif self.blackjack == True:
+            self.money += self.bet * 2.5
+            text_effects.writing_effect("BLACKJACK!!! Congratulations! You won ${}!".format(self.bet))
+            self.bet = 0
         else:
-            self.bet += self.bet
+            self.money += self.bet
+            text_effects.writing_effect("Congratulations! You won ${}!".format(self.bet))
+            self.bet = 0
     
     def busted(self):
         self.bust = True
@@ -48,9 +56,17 @@ class Player:
     
     def has_ace(self):
         self.ace = True
+
+    def double_d(self):
+        self.double_down == True
     
+    def erase_sum(self):
+        self.sum_of_cards = 0
+        self.ace = False
+
     def sum_cards_hand(self):
         values = []
+        aces = []
         non_nums = {
         "J" : 10,
         "Q" : 10,
@@ -60,14 +76,42 @@ class Player:
         for card in self.cards_in_hand:
             values.append(card[:1])
         
-        if "A" in values:
+        while "A" in values:
             ace_idx = values.index("A")
-            a_letter = values.pop(ace_idx)
-            values.append(a_letter)
+            ace_letter = values.pop(ace_idx)
+            aces.append(ace_letter)
+
+        for value in values:
+            try:
+                self.sum_of_cards += int(value)
+            except ValueError:
+                self.sum_of_cards += 10
+                
+        if bool(aces) == True:
+            for ace in aces:
+                if self.ace == True and (len(aces) > 1):
+                    self.sum_of_cards += 1
+                elif self.sum_of_cards + 12 > 21 and (len(aces) > 1):
+                    self.sum_of_cards += 1
+                    self.has_ace()
+                elif self.sum_of_cards + 11 > 21:
+                    self.sum_of_cards += 1
+                    self.has_ace()
+                else:
+                    self.sum_of_cards += 11
+                    self.has_ace()
+    
+    def win_lose(self):
+        losing_txt = "Oof, looks like you didn't make the cut!"
+        if self.sum_of_cards > 21:
+            text_effects.writing_effect("")
+            self.game_over = True
+        if self.sum_of_cards == 21 and len(self.cards_in_hand) == 2:
+            self.blackjack = True
+            self.win()
+        if self.sum_of_cards == 21:
+            self.win()
         
-        # for value in values:
-                    
-            
 
 
 def create_decks(num_decks = 6):
@@ -109,14 +153,31 @@ def betting(player, num):
         
 def dealing(shuffled_deck, card_pile, lst_players):
     for player in lst_players:
+        player.erase_sum()
         for i in range(2):
             card = shuffled_deck.pop()
             card_pile.append(card)
             player.cards_in_hand.append(card)
+
+def deal_one(shuffled_deck, card_pile, player):
+    player.erase_sum()
+    card = shuffled_deck.pop()
+    card_pile.append(card)
+    player.cards_in_hand.append(card)
+
 
 def return_pile(card_pile, used_deck):
     for card in card_pile:
         used_deck.append(card)
     return used_deck
 
-# def player_turn()
+def player_turn(turn, shuffled_deck, card_pile, player):
+    if turn.lower() == "hit":
+        deal_one(shuffled_deck, card_pile, player)
+        
+    elif turn.lower() == "stand":
+        pass
+    elif turn.lower() == "doubledown" and player.sum_of_cards in range(9, 12):
+        player.double_d()
+        deal_one(shuffled_deck, card_pile, player)
+    
