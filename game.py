@@ -3,22 +3,22 @@ from xml.dom import ValidationErr
 import text_effects
 
 class Player:
-    cards_in_hand = []
-    sum_of_cards = 0
-    money = 100
-    bet = 0
-    blackjack = False
-    pairs = False
-    bust = False
-    ace = False
-    hit = False
-    stand = False
-    double_down = False
-    game_over = False
 
     def __init__(self, name, is_dealer=False):
         self.name = name
         self.is_dealer = is_dealer
+        self.cards_in_hand = []
+        self.sum_of_cards = 0
+        self.money = 100
+        self.bet = 0
+        self.blackjack = False
+        self.pairs = False
+        self.bust = False
+        self.ace = False
+        self.hit = False
+        self.stand = False
+        self.double_down = False
+        self.game_over = False
     
     def dealer_money(self):
         if self.is_dealer == True:
