@@ -167,7 +167,8 @@ def deal_one(shuffled_deck, card_pile, player):
 
 
 def return_pile(card_pile, used_deck):
-    for card in card_pile:
+    for n in range(len(card_pile)):
+        card = card_pile.pop()
         used_deck.append(card)
     return used_deck
 
